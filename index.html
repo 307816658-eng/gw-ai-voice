@@ -2,8 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>郭总专属 AI 配音工作台 · 云端直连门户</title>
+  <meta name="description" content="本地算力驱动的高质量 AI 语音合成与配音工具，云端直连门户一键进入">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#0f172a">
@@ -213,6 +215,48 @@
       color: #64748b;
       line-height: 1.6;
     }
+    .back-portal-capsule {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 40;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 9999px;
+      background: rgba(15, 23, 42, 0.72);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 12px rgba(56, 189, 248, 0.12);
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      line-height: 1.2;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .back-portal-capsule:hover,
+    .back-portal-capsule:focus-visible {
+      background: rgba(2, 132, 199, 0.88);
+      color: #ffffff;
+      border-color: rgba(56, 189, 248, 0.75);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+      outline: none;
+    }
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      }
+      .back-portal-capsule {
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+        padding: 7px 12px;
+        font-size: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -248,8 +292,10 @@
     </div>
   </div>
 
+  <a class="back-portal-capsule" href="https://aweiblog.asia/" target="_blank" rel="noopener noreferrer">← 返回阿伟主站</a>
+
   <script>
-    let activeUrl = "https://grey-envelope-amounts-even.trycloudflare.com";
+    let activeUrl = "https://ai-voice.aweiblog.asia";
     let tunnelConnected = false;
     let isCheckingTunnel = false;
     let pendingEnterWorkbench = false;
@@ -316,7 +362,7 @@
           }
         }
       } catch (e) {
-        console.log('Using default activeUrl:', activeUrl);
+        // 保留兜底永久隧道地址
       } finally {
         if (timer !== null) clearTimeout(timer);
         directBtnEl.href = activeUrl;
