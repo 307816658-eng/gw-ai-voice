@@ -8,488 +8,1797 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#0b0e14">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      /* 曜石声学工作台配色体系 */
+      --bg-canvas: #0b0e14;
+      --bg-elevated: #111621;
+      --surface-card: rgba(18, 24, 35, 0.88);
+      --surface-sub: rgba(12, 16, 25, 0.72);
+      --surface-pill: rgba(255, 255, 255, 0.05);
+
+      --ink-primary: #f1f5f9;
+      --ink-secondary: #a1b0c4;
+      --ink-muted: #7b8ba1;
+
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.16);
+
+      /* 品牌与状态色（克制高雅、高对比） */
+      --accent: #d96b34;
+      --accent-hover: #e57a43;
+      --accent-active: #c05a27;
+      --accent-glow: rgba(217, 107, 52, 0.34);
+
+      --cyan: #38bdf8;
+      --cyan-soft: rgba(56, 189, 248, 0.12);
+      --cyan-border: rgba(56, 189, 248, 0.28);
+
+      --emerald: #34d399;
+      --emerald-soft: rgba(52, 211, 153, 0.12);
+      --emerald-border: rgba(52, 211, 153, 0.30);
+
+      --amber: #fbbf24;
+      --amber-soft: rgba(251, 191, 36, 0.12);
+      --amber-border: rgba(251, 191, 36, 0.26);
+
+      --rose: #fca5a5;
+      --rose-strong: #f87171;
+      --rose-soft: rgba(248, 113, 113, 0.11);
+      --rose-border: rgba(248, 113, 113, 0.30);
+
+      /* 圆角层级：主卡 > 次级卡 > 控件 > 胶囊 */
+      --radius-lg: 22px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
+      --radius-pill: 9999px;
+
+      /* 阴影层级 */
+      --shadow-card: 0 24px 56px -14px rgba(0, 0, 0, 0.65), 0 4px 16px -2px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      --shadow-sub: 0 8px 24px -10px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+      --shadow-float: 0 10px 28px -6px rgba(0, 0, 0, 0.55), 0 0 16px rgba(56, 189, 248, 0.12);
+
+      /* 排版变量 */
+      --lh-body: 1.65;
+      --lh-meta: 1.55;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html {
+      overflow-x: clip;
+      max-width: 100%;
+    }
+
     body {
-      background: radial-gradient(circle at top, #1e293b 0%, #0f172a 100%);
-      color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, "PingFang SC", sans-serif;
       min-height: 100vh;
+      min-width: 320px;
+      max-width: 100%;
+      overflow-x: clip;
+      background-color: var(--bg-canvas);
+      background-image:
+        radial-gradient(ellipse 75% 48% at 15% -6%, rgba(56, 189, 248, 0.11), transparent 62%),
+        radial-gradient(ellipse 65% 45% at 88% 102%, rgba(217, 107, 52, 0.09), transparent 60%),
+        radial-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 26px 26px;
+      color: var(--ink-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+      font-size: 14px;
+      line-height: var(--lh-body);
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 24px 16px;
-      -webkit-tap-highlight-color: transparent;
+      padding: 28px 16px 88px;
     }
-    .portal-card {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1.5px solid rgba(56, 189, 248, 0.4);
-      border-radius: 20px;
-      max-width: 440px;
-      width: 100%;
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.15);
-      animation: fadeIn 0.4s ease-out;
+
+    button, a {
+      font-family: inherit;
+      font-variant-numeric: tabular-nums;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+
+    button:focus-visible,
+    a:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
     }
-    .icon-badge {
-      width: 68px;
-      height: 68px;
-      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
-      border-radius: 18px;
+
+    /* SVG 图标系统 */
+    .icon-slot {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
+      flex-shrink: 0;
+      line-height: 1;
     }
-    h1 {
-      font-size: 22px;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-      margin-bottom: 6px;
+    .icon-slot svg {
+      display: block;
+    }
+    .is-spinning svg {
+      animation: iconSpin 1s linear infinite;
+    }
+    @keyframes iconSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 主容器 */
+    .portal-shell {
+      width: min(920px, 100%);
+      max-width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      animation: panelRise 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    @keyframes panelRise {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 顶部微信息条 */
+    .top-meta-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 4px;
+      min-width: 0;
+    }
+
+    .brand-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+    }
+
+    .brand-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .hw-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+      background: var(--surface-pill);
+      border: 1px solid var(--border-soft);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink-secondary);
+      line-height: 1.4;
+    }
+
+    .hw-chip .icon-slot {
+      color: var(--cyan);
+    }
+
+    /* 主网格 */
+    .portal-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.24fr) minmax(0, 0.96fr);
+      gap: 18px;
+      align-items: stretch;
+      min-width: 0;
+    }
+
+    /* 主卡 & 副卡层级 */
+    .surface-card {
+      background: var(--surface-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .primary-panel {
+      padding: 28px 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .secondary-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .sub-card {
+      background: var(--surface-card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 22px;
+      min-width: 0;
+    }
+
+    /* 头部品牌识别 */
+    .hero-head {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .icon-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
       color: #ffffff;
+      box-shadow: 0 10px 26px -6px rgba(56, 189, 248, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.32);
     }
+
+    .hero-titles {
+      min-width: 0;
+      flex: 1;
+    }
+
+    h1 {
+      font-size: clamp(20px, 2.4vw, 24px);
+      font-weight: 700;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+      margin-bottom: 5px;
+    }
+
     .sub {
-      font-size: 13px;
-      color: #94a3b8;
-      margin-bottom: 22px;
-      line-height: 1.5;
+      font-size: 13.5px;
+      line-height: var(--lh-meta);
+      color: var(--ink-secondary);
     }
+
+    /* 连通状态中枢卡片 */
+    .status-stage {
+      background: var(--surface-sub);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sub);
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+
+    .status-stage.is-checking {
+      border-color: var(--cyan-border);
+    }
+
+    .status-stage.is-online {
+      border-color: var(--emerald-border);
+    }
+
+    .status-stage.is-offline {
+      border-color: var(--rose-border);
+      background: rgba(38, 16, 20, 0.56);
+    }
+
+    .status-stage-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: rgba(34, 197, 94, 0.15);
-      border: 1px solid rgba(34, 197, 94, 0.3);
-      color: #4ade80;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 12px;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: var(--radius-pill);
+      font-size: 12.5px;
       font-weight: 600;
-      margin-bottom: 20px;
+      line-height: 1.4;
+      background: var(--emerald-soft);
+      border: 1px solid var(--emerald-border);
+      color: var(--emerald);
+      transition: all 0.2s ease;
     }
+
     .status-dot {
-      width: 8px;
-      height: 8px;
-      background: #4ade80;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      box-shadow: 0 0 8px #4ade80;
-      animation: pulse 1.5s infinite;
+      background: currentColor;
+      box-shadow: 0 0 8px currentColor;
+      flex-shrink: 0;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
-    }
-    .jump-btn {
-      display: block;
-      width: 100%;
-      background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 16px;
-      font-weight: 700;
-      padding: 14px;
-      border-radius: 14px;
-      box-shadow: 0 4px 16px rgba(234, 88, 12, 0.4);
-      margin-bottom: 12px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .jump-btn:active {
-      transform: scale(0.98);
-    }
-    .cred-box {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 12px;
-      font-size: 13px;
-      color: #cbd5e1;
-      margin-bottom: 18px;
-      line-height: 1.6;
-      text-align: left;
-    }
-    .cred-title {
-      font-weight: 700;
-      color: #38bdf8;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .cred-tag {
-      background: rgba(234, 179, 8, 0.15);
-      color: #facc15;
-      padding: 1px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-    }
-    .copy-link-btn {
-      background: rgba(56, 189, 248, 0.15);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #38bdf8;
-      font-size: 13px;
-      font-weight: 600;
-      padding: 10px;
-      border-radius: 10px;
-      width: 100%;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .copy-link-btn:active {
-      background: rgba(56, 189, 248, 0.25);
-    }
+
     .status-badge.is-checking {
-      background: rgba(56, 189, 248, 0.15);
-      border-color: rgba(56, 189, 248, 0.35);
+      background: var(--cyan-soft);
+      border-color: var(--cyan-border);
       color: #7dd3fc;
     }
+
     .status-badge.is-checking .status-dot {
-      background: #38bdf8;
-      box-shadow: 0 0 8px #38bdf8;
+      animation: pulseDot 1.3s ease-in-out infinite;
     }
+
     .status-badge.is-offline {
-      background: rgba(239, 68, 68, 0.15);
-      border-color: rgba(248, 113, 113, 0.35);
-      color: #fca5a5;
+      background: var(--rose-soft);
+      border-color: var(--rose-border);
+      color: var(--rose);
     }
+
     .status-badge.is-offline .status-dot {
-      background: #f87171;
-      box-shadow: 0 0 8px #f87171;
       animation: none;
     }
-    .tunnel-alert {
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(0.8); }
+    }
+
+    .stage-recheck-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-soft);
+      color: var(--ink-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.16s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .stage-recheck-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--cyan-border);
+      color: #e0f2fe;
+      transform: translateY(-1px);
+    }
+
+    .stage-recheck-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .stage-recheck-btn:disabled {
+      opacity: 0.52;
+      cursor: not-allowed;
+    }
+
+    /* 声波 Loading 动画区 */
+    .loading-panel {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .loading-panel[hidden] {
       display: none;
-      background: rgba(127, 29, 29, 0.32);
-      border: 1px solid rgba(248, 113, 113, 0.4);
-      border-radius: 12px;
-      padding: 14px;
-      margin-bottom: 18px;
-      text-align: left;
-      animation: fadeIn 0.25s ease-out;
     }
-    .tunnel-alert.is-visible {
+
+    .loading-wave-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .loading-wave-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .eq-bars {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .eq-bars span {
       display: block;
+      width: 3px;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--cyan);
+      animation: eqBounce 1.05s ease-in-out infinite;
     }
+
+    .eq-bars span:nth-child(2) { animation-delay: 0.14s; }
+    .eq-bars span:nth-child(3) { animation-delay: 0.28s; }
+    .eq-bars span:nth-child(4) { animation-delay: 0.42s; }
+    .eq-bars span:nth-child(5) { animation-delay: 0.56s; }
+
+    @keyframes eqBounce {
+      0%, 100% { height: 5px; opacity: 0.48; }
+      50% { height: 18px; opacity: 1; }
+    }
+
+    .loading-stage-copy {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink-primary);
+      line-height: 1.5;
+      transition: opacity 0.24s ease, transform 0.24s ease;
+    }
+
+    .loading-stage-copy.is-swapping {
+      opacity: 0;
+      transform: translateY(3px);
+    }
+
+    .loading-timer {
+      font-size: 12px;
+      color: var(--ink-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .shimmer-track {
+      position: relative;
+      height: 4px;
+      width: 100%;
+      border-radius: var(--radius-pill);
+      background: rgba(56, 189, 248, 0.14);
+      overflow: hidden;
+    }
+
+    .shimmer-bar {
+      position: absolute;
+      inset: 0;
+      width: 45%;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.9), rgba(186, 230, 253, 0.95), transparent);
+      animation: shimmerSweep 1.55s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes shimmerSweep {
+      0% { transform: translateX(-110%); }
+      100% { transform: translateX(250%); }
+    }
+
+    /* 在线就绪说明条 */
+    .online-note {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--ink-secondary);
+      line-height: var(--lh-meta);
+    }
+
+    .online-note[hidden] {
+      display: none;
+    }
+
+    .pause-auto-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-soft);
+      color: var(--ink-primary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.18s ease, border-color 0.18s ease;
+    }
+
+    .pause-auto-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .pause-auto-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    /* 异常大白话兜底面板 */
+    .tunnel-alert {
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(248, 113, 113, 0.22);
+      animation: panelRise 0.24s ease-out both;
+    }
+
+    .tunnel-alert[hidden] {
+      display: none;
+    }
+
+    .tunnel-alert-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fee2e2;
+      margin-bottom: 6px;
+      line-height: 1.45;
+    }
+
+    .tunnel-alert-title .icon-slot {
+      color: var(--rose-strong);
+    }
+
     .tunnel-alert-msg {
       font-size: 13px;
       color: #fecaca;
-      line-height: 1.6;
-      margin-bottom: 10px;
+      line-height: var(--lh-body);
+      margin-bottom: 12px;
+      word-break: break-word;
     }
+
     .retry-btn {
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
       width: 100%;
-      background: rgba(248, 113, 113, 0.22);
-      border: 1px solid rgba(248, 113, 113, 0.45);
+      min-height: 42px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(248, 113, 113, 0.18);
+      border: 1px solid rgba(248, 113, 113, 0.42);
       color: #ffffff;
-      font-size: 13px;
+      font-size: 13.5px;
       font-weight: 700;
-      padding: 10px 12px;
-      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: transform 0.15s ease, background-color 0.18s ease, border-color 0.18s ease;
     }
+
+    .retry-btn:hover:not(:disabled) {
+      background: rgba(248, 113, 113, 0.28);
+      border-color: rgba(252, 165, 165, 0.65);
+      transform: translateY(-1px);
+    }
+
     .retry-btn:active:not(:disabled) {
-      transform: scale(0.98);
-      background: rgba(248, 113, 113, 0.32);
+      transform: scale(0.97);
     }
+
     .retry-btn:disabled {
-      opacity: 0.65;
+      opacity: 0.58;
       cursor: not-allowed;
     }
-    .tip-footer {
-      margin-top: 18px;
-      font-size: 11px;
-      color: #64748b;
-      line-height: 1.6;
+
+    /* 主操作按钮组 */
+    .action-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
     }
+
+    .jump-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      width: 100%;
+      min-height: 50px;
+      padding: 13px 18px;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-hover) 0%, var(--accent) 55%, var(--accent-active) 100%);
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 15.5px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 12px 26px -6px var(--accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      cursor: pointer;
+      transition: transform 0.16s cubic-bezier(0.22, 1, 0.36, 1), filter 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .jump-btn:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1.5px);
+      box-shadow: 0 16px 32px -6px rgba(217, 107, 52, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+
+    .jump-btn:active {
+      transform: scale(0.97);
+      filter: brightness(0.96);
+    }
+
+    .copy-link-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 16px;
+      border-radius: var(--radius-sm);
+      background: rgba(56, 189, 248, 0.11);
+      border: 1px solid rgba(56, 189, 248, 0.26);
+      color: #7dd3fc;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .copy-link-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.18);
+      border-color: rgba(56, 189, 248, 0.48);
+      color: #e0f2fe;
+      transform: translateY(-1px);
+    }
+
+    .copy-link-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .copy-link-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .copy-link-btn.is-copied {
+      background: var(--emerald-soft);
+      border-color: var(--emerald-border);
+      color: var(--emerald);
+    }
+
+    /* 手动复制降级抽屉（剪贴板受限时无弹窗平滑展开） */
+    .manual-copy-box {
+      background: var(--surface-sub);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      animation: panelRise 0.2s ease-out both;
+    }
+
+    .manual-copy-box[hidden] {
+      display: none;
+    }
+
+    .manual-copy-tip {
+      font-size: 12px;
+      color: var(--ink-secondary);
+      line-height: 1.5;
+    }
+
+    .manual-copy-textarea {
+      width: 100%;
+      min-height: 102px;
+      resize: none;
+      background: rgba(0, 0, 0, 0.28);
+      border: 1px solid var(--border-soft);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: var(--ink-primary);
+      font-size: 12.5px;
+      line-height: 1.65;
+      font-family: inherit;
+      overflow: hidden;
+    }
+
+    /* 右侧卡 1：访问凭据 */
+    .card-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .card-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+
+    .card-title .icon-slot {
+      color: var(--cyan);
+    }
+
+    .card-pill {
+      padding: 2px 9px;
+      border-radius: var(--radius-pill);
+      background: var(--amber-soft);
+      border: 1px solid var(--amber-border);
+      color: var(--amber);
+      font-size: 11.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .cred-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cred-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 13px;
+      border-radius: 12px;
+      background: var(--surface-sub);
+      border: 1px solid var(--border-soft);
+      min-width: 0;
+    }
+
+    .cred-left {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .cred-label {
+      font-size: 13px;
+      color: var(--ink-muted);
+    }
+
+    .cred-tag {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 7px;
+      background: rgba(251, 191, 36, 0.13);
+      border: 1px solid rgba(251, 191, 36, 0.24);
+      color: #fde68a;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13.5px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .cred-alt {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+
+    .mini-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 10px;
+      min-height: 30px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-soft);
+      color: var(--ink-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+
+    .mini-copy-btn:hover:not(:disabled) {
+      background: rgba(56, 189, 248, 0.14);
+      border-color: var(--cyan-border);
+      color: #e0f2fe;
+      transform: translateY(-1px);
+    }
+
+    .mini-copy-btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .mini-copy-btn.is-copied {
+      background: var(--emerald-soft);
+      border-color: var(--emerald-border);
+      color: var(--emerald);
+    }
+
+    /* 右侧卡 2：节点信息与手机端妙招 */
+    .endpoint-box {
+      padding: 12px 13px;
+      border-radius: 12px;
+      background: var(--surface-sub);
+      border: 1px solid var(--border-soft);
+      margin-bottom: 14px;
+      min-width: 0;
+    }
+
+    .endpoint-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink-muted);
+      margin-bottom: 4px;
+    }
+
+    .endpoint-label .icon-slot {
+      color: var(--emerald);
+    }
+
+    .endpoint-url {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .tip-footer {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 13px;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.06);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      font-size: 12.5px;
+      color: var(--ink-secondary);
+      line-height: var(--lh-body);
+    }
+
+    .tip-footer .icon-slot {
+      color: var(--cyan);
+      margin-top: 2px;
+    }
+
+    .tip-footer b {
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    /* 返回阿伟主站悬浮胶囊 */
     .back-portal-capsule {
       position: fixed;
       right: 20px;
-      bottom: 20px;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
       z-index: 40;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      border-radius: 9999px;
-      background: rgba(15, 23, 42, 0.72);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(56, 189, 248, 0.32);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 12px rgba(56, 189, 248, 0.12);
-      color: #e2e8f0;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: var(--radius-pill);
+      background: rgba(17, 23, 34, 0.86);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      box-shadow: var(--shadow-float);
+      color: var(--ink-primary);
       font-size: 13px;
       font-weight: 600;
       line-height: 1.2;
       text-decoration: none;
-      transition: all 0.2s ease;
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
     }
-    .back-portal-capsule:hover,
-    .back-portal-capsule:focus-visible {
-      background: rgba(2, 132, 199, 0.88);
+
+    .back-portal-capsule:hover {
+      background: #0284c7;
       color: #ffffff;
-      border-color: rgba(56, 189, 248, 0.75);
+      border-color: rgba(125, 211, 252, 0.72);
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
-      outline: none;
+      box-shadow: 0 10px 26px rgba(2, 132, 199, 0.42);
     }
-    @media (max-width: 768px) {
+
+    .back-portal-capsule:active {
+      transform: translateY(0) scale(0.97);
+      background: #0369a1;
+    }
+
+    /* Toast 轻提示 */
+    .toast-stack {
+      position: fixed;
+      right: 20px;
+      bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: none;
+      max-width: min(340px, calc(100vw - 32px));
+    }
+
+    .toast-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--border-strong);
+      color: #f8fafc;
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.48);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .toast-item.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast-item.is-success .icon-slot { color: var(--emerald); }
+    .toast-item.is-error { border-color: var(--rose-border); }
+    .toast-item.is-error .icon-slot { color: var(--rose-strong); }
+    .toast-item.is-info .icon-slot { color: var(--cyan); }
+
+    /* 移动端与 375px 适配 */
+    @media (max-width: 840px) {
       body {
-        padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+        justify-content: flex-start;
+        padding: 20px 14px calc(88px + env(safe-area-inset-bottom, 0px));
+      }
+      .portal-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+      }
+      .primary-panel {
+        padding: 22px 18px;
+        gap: 16px;
+      }
+      .sub-card {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-head {
+        gap: 13px;
+      }
+      .icon-badge {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+      }
+      .top-meta-strip {
+        gap: 8px;
       }
       .back-portal-capsule {
-        right: 12px;
-        bottom: calc(12px + env(safe-area-inset-bottom, 0px));
-        padding: 7px 12px;
-        font-size: 12px;
+        right: 14px;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        padding: 8px 13px;
+        font-size: 12.5px;
+      }
+      .toast-stack {
+        left: 14px;
+        right: 14px;
+        bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+        max-width: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
   </style>
 </head>
 <body>
 
-  <div class="portal-card">
-    <div class="icon-badge">🎙️</div>
-    <h1>郭总专属 AI 配音工作台</h1>
-    <div class="sub">Apple Silicon M1 Pro 私有神经网络加速引擎</div>
-
-    <div class="status-badge is-checking" id="status-badge">
-      <span class="status-dot"></span>
-      <span id="status-text">正在连通 Mac 算力中枢...</span>
-    </div>
-
-    <div class="tunnel-alert" id="tunnel-alert" role="alert" aria-live="polite" hidden>
-      <div class="tunnel-alert-msg" id="tunnel-alert-msg">配音服务暂时连不上（后台隧道可能过期了）。点下面按钮重试，或稍等 1 分钟后再来。</div>
-      <button type="button" class="retry-btn" id="retry-btn">重试连接</button>
-    </div>
-
-    <div class="cred-box">
-      <div class="cred-title">
-        <span>🔐 访问凭据 (保护您的 GPU 算力)</span>
+  <main class="portal-shell">
+    <header class="top-meta-strip">
+      <div class="brand-eyebrow">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <span>AWEI VOICE PORTAL · 云端直连门户</span>
       </div>
-      <div>账号：<span class="cred-tag">admin</span> （或 guowei）</div>
-      <div>密码：<span class="cred-tag">888888</span></div>
+      <div class="hw-chip">
+        <span class="icon-slot" data-icon="cpu"></span>
+        <span>M1 Pro 32GB · 私有神经算力</span>
+      </div>
+    </header>
+
+    <div class="portal-grid">
+      <!-- 左侧核心主控卡：状态监测与快速进入 -->
+      <section class="surface-card primary-panel" aria-labelledby="portal-title">
+        <div>
+          <div class="hero-head" style="margin-bottom: 20px;">
+            <div class="icon-badge" aria-hidden="true">
+              <span class="icon-slot" data-icon="micHero"></span>
+            </div>
+            <div class="hero-titles">
+              <h1 id="portal-title">郭总专属 AI 配音工作台</h1>
+              <p class="sub">Apple Silicon M1 Pro 私有神经网络加速引擎</p>
+            </div>
+          </div>
+
+          <div class="status-stage is-checking" id="status-stage" aria-live="polite">
+            <div class="status-stage-head">
+              <div class="status-badge is-checking" id="status-badge">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="status-text">正在连通 Mac 算力中枢...</span>
+              </div>
+              <button type="button" class="stage-recheck-btn" id="recheck-btn">
+                <span class="icon-slot" id="recheck-icon" data-icon="refresh"></span>
+                <span>重新检测</span>
+              </button>
+            </div>
+
+            <!-- 探测中 Loading 动画（声波律动 + 流光条 + 阶段文案轮播） -->
+            <div class="loading-panel" id="loading-panel">
+              <div class="loading-wave-row">
+                <div class="loading-wave-left">
+                  <div class="eq-bars" aria-hidden="true">
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="loading-stage-copy" id="loading-stage-text">正在向云端边缘节点获取最新直连入口…</div>
+                </div>
+                <span class="loading-timer" id="loading-timer">已耗时 0.0s</span>
+              </div>
+              <div class="shimmer-track" aria-hidden="true">
+                <div class="shimmer-bar"></div>
+              </div>
+            </div>
+
+            <!-- 连通成功后的自动跳转提示与可控开关 -->
+            <div class="online-note" id="online-note" hidden>
+              <span id="online-note-text">算力中枢已就绪，即将为您进入配音工作台</span>
+              <button type="button" class="pause-auto-btn" id="pause-auto-btn" hidden>
+                <span class="icon-slot" data-icon="pause"></span>
+                <span>暂留此页</span>
+              </button>
+            </div>
+
+            <!-- 异常大白话兜底面板 -->
+            <div class="tunnel-alert" id="tunnel-alert" role="alert" hidden>
+              <div class="tunnel-alert-title">
+                <span class="icon-slot" data-icon="alert"></span>
+                <span id="tunnel-alert-title">配音服务暂时连不上</span>
+              </div>
+              <p class="tunnel-alert-msg" id="tunnel-alert-msg">配音服务暂时连不上（后台隧道可能过期了）。点下面按钮重试，或稍等 1 分钟后再来。</p>
+              <button type="button" class="retry-btn" id="retry-btn">
+                <span class="icon-slot" data-icon="refresh"></span>
+                <span id="retry-btn-label">重试连接</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-stack">
+          <a href="https://ai-voice.aweiblog.asia" id="direct-btn" class="jump-btn">
+            <span class="icon-slot" data-icon="rocket"></span>
+            <span>立即进入配音工作台</span>
+          </a>
+          <button type="button" class="copy-link-btn" id="copy-btn">
+            <span class="icon-slot" id="copy-btn-icon" data-icon="copy"></span>
+            <span id="copy-btn-label">复制直连地址与访问密码</span>
+          </button>
+
+          <div class="manual-copy-box" id="manual-copy-box" hidden>
+            <div class="manual-copy-tip">当前浏览器限制自动写入剪贴板，请长按或全选下方文本手动复制：</div>
+            <textarea class="manual-copy-textarea" id="manual-copy-textarea" readonly aria-label="可手动复制的访问信息"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- 右侧随行栏：凭据保护 + 节点状态 + Safari 使用指南 -->
+      <aside class="secondary-stack">
+        <section class="sub-card" aria-labelledby="cred-title-heading">
+          <div class="card-header-row">
+            <h2 class="card-title" id="cred-title-heading">
+              <span class="icon-slot" data-icon="shield"></span>
+              <span>访问凭据</span>
+            </h2>
+            <span class="card-pill">保护您的 GPU 算力</span>
+          </div>
+
+          <div class="cred-list">
+            <div class="cred-row">
+              <div class="cred-left">
+                <span class="cred-label">账号</span>
+                <span class="cred-tag">admin</span>
+                <span class="cred-alt">（或 guowei）</span>
+              </div>
+              <button type="button" class="mini-copy-btn" data-copy-field="admin" aria-label="复制登录账号">
+                <span class="icon-slot" data-icon="copy"></span>
+                <span>复制</span>
+              </button>
+            </div>
+
+            <div class="cred-row">
+              <div class="cred-left">
+                <span class="cred-label">密码</span>
+                <span class="cred-tag">888888</span>
+              </div>
+              <button type="button" class="mini-copy-btn" data-copy-field="888888" aria-label="复制登录密码">
+                <span class="icon-slot" data-icon="copy"></span>
+                <span>复制</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sub-card" aria-labelledby="guide-title-heading">
+          <div class="card-header-row">
+            <h2 class="card-title" id="guide-title-heading">
+              <span class="icon-slot" data-icon="wifi"></span>
+              <span>直连通道与快捷方式</span>
+            </h2>
+          </div>
+
+          <div class="endpoint-box">
+            <div class="endpoint-label">
+              <span class="icon-slot" data-icon="info"></span>
+              <span>当前工作台入口节点</span>
+            </div>
+            <div class="endpoint-url" id="endpoint-display">https://ai-voice.aweiblog.asia</div>
+          </div>
+
+          <div class="tip-footer">
+            <span class="icon-slot" data-icon="mobile"></span>
+            <div>
+              <b>手机端妙招</b>：在 Safari 浏览器中点击底部的【分享】→【添加到主屏幕】，即可像真正 App 一样全屏使用！
+            </div>
+          </div>
+        </section>
+      </aside>
     </div>
+  </main>
 
-    <a href="#" id="direct-btn" class="jump-btn">🚀 立即进入配音工作台</a>
-    <button class="copy-link-btn" id="copy-btn">📋 复制直连地址与访问密码</button>
+  <a class="back-portal-capsule" href="https://aweiblog.asia/" target="_blank" rel="noopener noreferrer" aria-label="返回阿伟主站">
+    <span class="icon-slot" data-icon="arrowLeft"></span>
+    <span>返回阿伟主站</span>
+  </a>
 
-    <div class="tip-footer">
-      💡 <b>手机端妙招</b>：在 Safari 浏览器中点击底部的【分享】->【添加到主屏幕】，即可像真正 App 一样全屏使用！
-    </div>
-  </div>
-
-  <a class="back-portal-capsule" href="https://aweiblog.asia/" target="_blank" rel="noopener noreferrer">← 返回阿伟主站</a>
+  <div class="toast-stack" id="toast-stack" aria-live="polite"></div>
 
   <script>
-    let activeUrl = "https://ai-voice.aweiblog.asia";
-    let tunnelConnected = false;
-    let isCheckingTunnel = false;
-    let pendingEnterWorkbench = false;
-    let redirectTimer = null;
+    (function () {
+      'use strict';
 
-    const statusBadgeEl = document.getElementById('status-badge');
-    const statusTextEl = document.getElementById('status-text');
-    const directBtnEl = document.getElementById('direct-btn');
-    const tunnelAlertEl = document.getElementById('tunnel-alert');
-    const tunnelAlertMsgEl = document.getElementById('tunnel-alert-msg');
-    const retryBtnEl = document.getElementById('retry-btn');
+      // 客户端网络请求超时守卫（95s AbortController 超时）
+      const CLIENT_TIMEOUT_MS = 95000;
+      const FALLBACK_TUNNEL_URL = 'https://ai-voice.aweiblog.asia';
+      const DEFAULT_ERROR_TITLE = '配音服务暂时连不上';
+      const DEFAULT_ERROR_MSG = '配音服务暂时连不上（后台隧道可能过期了）。点下面按钮重试，或稍等 1 分钟后再来。';
 
-    const DEFAULT_ERROR_MSG = "配音服务暂时连不上（后台隧道可能过期了）。点下面按钮重试，或稍等 1 分钟后再来。";
+      // 统一线性矢量图标库（替代散落 emoji）
+      const ICONS = {
+        micHero: '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2" width="6" height="11" rx="3"/><path d="M5 10a7 7 0 0 0 14 0"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>',
+        cpu: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg>',
+        shield: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><rect x="9" y="10" width="6" height="5" rx="1"/><path d="M10 10V8a2 2 0 0 1 4 0v2"/></svg>',
+        rocket: '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg>',
+        copy: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+        check: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+        refresh: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg>',
+        alert: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><circle cx="12" cy="17" r="0.8" fill="currentColor" stroke="none"/></svg>',
+        wifi: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>',
+        mobile: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>',
+        pause: '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>',
+        arrowLeft: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>',
+        info: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v.5"/><path d="M12 11v5"/></svg>'
+      };
 
-    function isValidHttpUrl(url) {
-      if (typeof url !== 'string' || !url.trim()) return false;
-      try {
-        const parsed = new URL(url.trim());
-        return parsed.protocol === 'https:' || parsed.protocol === 'http:';
-      } catch (e) {
-        return false;
-      }
-    }
+      const LOADING_STAGES = [
+        '正在向云端边缘节点获取最新直连入口…',
+        '正在穿透加密隧道并探测 Mac 算力中枢…',
+        '正在校验配音工作台服务响应状态…',
+        '如设备刚刚唤醒，建立安全连接可能需要数秒…'
+      ];
 
-    function clearRedirectTimer() {
-      if (redirectTimer !== null) {
-        clearTimeout(redirectTimer);
-        redirectTimer = null;
-      }
-    }
-
-    function setBadgeState(state, text) {
-      statusBadgeEl.classList.remove('is-checking', 'is-offline');
-      if (state === 'checking') statusBadgeEl.classList.add('is-checking');
-      if (state === 'offline') statusBadgeEl.classList.add('is-offline');
-      statusTextEl.innerText = text;
-    }
-
-    function showTunnelAlert(message) {
-      tunnelAlertMsgEl.innerText = message || DEFAULT_ERROR_MSG;
-      tunnelAlertEl.hidden = false;
-      tunnelAlertEl.classList.add('is-visible');
-    }
-
-    function hideTunnelAlert() {
-      tunnelAlertEl.hidden = true;
-      tunnelAlertEl.classList.remove('is-visible');
-    }
-
-    // 动态拉取最新的工作台地址（5s 超时保护，失败回退保留当前 activeUrl）
-    async function loadTunnel() {
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timer = controller ? setTimeout(() => controller.abort(), 5000) : null;
-      try {
-        const res = await fetch('tunnel.json?t=' + Date.now(), {
-          cache: 'no-store',
-          signal: controller ? controller.signal : undefined
+      function renderIcons() {
+        document.querySelectorAll('[data-icon]').forEach((el) => {
+          const key = el.getAttribute('data-icon');
+          if (ICONS[key]) el.innerHTML = ICONS[key];
         });
-        if (res && res.ok) {
-          const data = await res.json();
-          if (data && isValidHttpUrl(data.url)) {
-            activeUrl = data.url.trim();
-            return true;
-          }
+      }
+
+      // 展示层脱敏处理：绝不将疑似密钥、Bearer 令牌或 Authorization 字段暴露到界面
+      function sanitizeSensitiveText(raw) {
+        if (typeof raw !== 'string') return '';
+        return raw
+          .replace(/<[^>]*>/g, ' ')
+          .replace(/\bsk-[a-z0-9_*-]+(?:\.+[a-z0-9_*-]+)*/gi, '[已脱敏]')
+          .replace(/\bBearer\s+[^\s,;'"`]+/gi, 'Bearer [已脱敏]')
+          .replace(/\bAuthorization\s*[:=]\s*(?:(?:Bearer|Basic|Token|Digest)\s+)?[^\s,;'"`]+/gi, 'Authorization: [已脱敏]')
+          .replace(/\bAIza[0-9A-Za-z_-]{10,}\b/g, '[已脱敏]')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
+
+      // 异常大白话分类器：429/1015、408/504/524/超时、5xx、断网及未知异常均收敛为中文大白话
+      function classifyTunnelError({ status = 0, rawText = '', errName = '', timedOut = false, isOffline = false } = {}) {
+        const safeRaw = sanitizeSensitiveText(rawText);
+        const lower = safeRaw.toLowerCase();
+
+        if (isOffline) {
+          return {
+            title: '当前网络好像断开了',
+            message: '暂时连不上云端与配音算力中枢，请检查手机或电脑网络后再点击「重试连接」。'
+          };
         }
-      } catch (e) {
-        // 保留兜底永久隧道地址
-      } finally {
-        if (timer !== null) clearTimeout(timer);
-        directBtnEl.href = activeUrl;
+
+        if (
+          status === 429 ||
+          /\b1015\b/.test(safeRaw) ||
+          /rate[\s_-]*limit|too\s*many\s*requests|throttl|限流|人数较多/i.test(lower)
+        ) {
+          return {
+            title: '平台正忙，限流中，请稍后再试',
+            message: '平台正忙，限流中，请稍后再试。当前请求接入通道较为拥挤，请等待片刻后点击下方「重试连接」。'
+          };
+        }
+
+        if (
+          timedOut ||
+          status === 408 ||
+          status === 504 ||
+          status === 524 ||
+          errName === 'AbortError' ||
+          /timeout|timed\s*out|abort|超时/i.test(lower)
+        ) {
+          return {
+            title: '响应超时，AI 思考太久了',
+            message: '响应超时，AI 思考太久了。Mac 算力中枢可能正在启动或处于高负载中，请点击下方「重试连接」。'
+          };
+        }
+
+        if (
+          (status >= 500 && status < 600) ||
+          /50[0-9]|52[0-9]|530|internal\s*server|bad\s*gateway|service\s*unavailable|upstream/i.test(lower)
+        ) {
+          return {
+            title: 'AI 服务暂时开小差了',
+            message: 'AI 服务暂时开小差了。云端隧道或后台节点出现短暂波动，通常等待 1 分钟后点「重试连接」即可恢复。'
+          };
+        }
+
+        if (errName === 'TypeError' || /failed\s*to\s*fetch|networkerror|network\s*error|load\s*failed/i.test(lower)) {
+          return {
+            title: '配音通道暂时不可达',
+            message: DEFAULT_ERROR_MSG
+          };
+        }
+
+        return {
+          title: DEFAULT_ERROR_TITLE,
+          message: DEFAULT_ERROR_MSG
+        };
       }
-      return false;
-    }
 
-    // 隧道连通性自检（8s 超时，探测 activeUrl 是否可达）
-    async function checkTunnel() {
-      if (!isValidHttpUrl(activeUrl)) {
-        tunnelConnected = false;
-        clearRedirectTimer();
-        setBadgeState('offline', '连接失败 · 配音地址无效');
-        showTunnelAlert('配音服务地址暂时无效（后台隧道配置异常）。点下面按钮重试，或稍等 1 分钟后再来。');
-        return false;
+      function isValidHttpUrl(url) {
+        if (typeof url !== 'string' || !url.trim()) return false;
+        try {
+          const parsed = new URL(url.trim());
+          return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+        } catch (e) {
+          return false;
+        }
       }
 
-      let timedOut = false;
-      const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-      const timer = controller ? setTimeout(() => {
-        timedOut = true;
-        controller.abort();
-      }, 8000) : null;
+      // 统一带 95s AbortController 超时的网络请求工具
+      async function fetchWithTimeout(url, options = {}, timeoutMs = CLIENT_TIMEOUT_MS) {
+        const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+        let timedOut = false;
+        const timer = controller
+          ? setTimeout(() => {
+              timedOut = true;
+              controller.abort();
+            }, timeoutMs)
+          : null;
 
-      try {
-        await fetch(activeUrl, {
-          method: 'GET',
-          mode: 'no-cors',
-          cache: 'no-store',
-          credentials: 'omit',
-          signal: controller ? controller.signal : undefined
-        });
-        tunnelConnected = true;
-        hideTunnelAlert();
-        setBadgeState('online', '连接正常 · 算力中枢在线');
-        return true;
-      } catch (e) {
-        tunnelConnected = false;
+        try {
+          const response = await fetch(url, {
+            ...options,
+            signal: controller ? controller.signal : undefined
+          });
+          return { response, timedOut };
+        } catch (err) {
+          if (timedOut && err) {
+            err.__timedOut = true;
+          }
+          throw err;
+        } finally {
+          if (timer !== null) clearTimeout(timer);
+        }
+      }
+
+      // DOM 引用
+      const statusStageEl = document.getElementById('status-stage');
+      const statusBadgeEl = document.getElementById('status-badge');
+      const statusTextEl = document.getElementById('status-text');
+      const loadingPanelEl = document.getElementById('loading-panel');
+      const loadingStageTextEl = document.getElementById('loading-stage-text');
+      const loadingTimerEl = document.getElementById('loading-timer');
+      const onlineNoteEl = document.getElementById('online-note');
+      const onlineNoteTextEl = document.getElementById('online-note-text');
+      const pauseAutoBtnEl = document.getElementById('pause-auto-btn');
+      const tunnelAlertEl = document.getElementById('tunnel-alert');
+      const tunnelAlertTitleEl = document.getElementById('tunnel-alert-title');
+      const tunnelAlertMsgEl = document.getElementById('tunnel-alert-msg');
+      const retryBtnEl = document.getElementById('retry-btn');
+      const retryBtnLabelEl = document.getElementById('retry-btn-label');
+      const recheckBtnEl = document.getElementById('recheck-btn');
+      const recheckIconEl = document.getElementById('recheck-icon');
+      const directBtnEl = document.getElementById('direct-btn');
+      const copyBtnEl = document.getElementById('copy-btn');
+      const copyBtnIconEl = document.getElementById('copy-btn-icon');
+      const copyBtnLabelEl = document.getElementById('copy-btn-label');
+      const manualCopyBoxEl = document.getElementById('manual-copy-box');
+      const manualCopyTextareaEl = document.getElementById('manual-copy-textarea');
+      const endpointDisplayEl = document.getElementById('endpoint-display');
+      const toastStackEl = document.getElementById('toast-stack');
+
+      // 运行状态
+      let activeUrl = FALLBACK_TUNNEL_URL;
+      let tunnelConnected = false;
+      let isCheckingTunnel = false;
+      let pendingEnterWorkbench = false;
+      let autoRedirectPaused = false;
+      let redirectTimer = null;
+      let loadingRotateTimer = null;
+      let loadingTickTimer = null;
+      let loadingStartAt = 0;
+      let loadingStageIdx = 0;
+      let lastLoadError = null;
+
+      function updateActiveEndpointDisplay(url) {
+        const cleanUrl = sanitizeSensitiveText(url) || FALLBACK_TUNNEL_URL;
+        directBtnEl.href = isValidHttpUrl(url) ? url.trim() : FALLBACK_TUNNEL_URL;
+        endpointDisplayEl.textContent = cleanUrl;
+      }
+
+      function clearRedirectTimer() {
+        if (redirectTimer !== null) {
+          clearTimeout(redirectTimer);
+          redirectTimer = null;
+        }
+      }
+
+      function pauseAutoRedirect(reasonText) {
+        autoRedirectPaused = true;
         clearRedirectTimer();
-        setBadgeState('offline', '连接失败 · 配音服务暂不可用');
-        if (typeof navigator !== 'undefined' && navigator.onLine === false) {
-          showTunnelAlert('当前网络似乎断开了，暂时连不上配音服务。请检查网络后点下面按钮重试。');
-        } else if (timedOut || (e && e.name === 'AbortError')) {
-          showTunnelAlert('配音服务响应太慢（后台隧道可能过期或正在重启）。点下面按钮重试，或稍等 1 分钟后再来。');
+        pauseAutoBtnEl.hidden = true;
+        if (tunnelConnected && reasonText) {
+          onlineNoteTextEl.textContent = reasonText;
+          setBadgeState('online', '连接正常 · 算力中枢在线');
+        }
+      }
+
+      function stopLoadingTimers() {
+        if (loadingRotateTimer !== null) {
+          clearInterval(loadingRotateTimer);
+          loadingRotateTimer = null;
+        }
+        if (loadingTickTimer !== null) {
+          clearInterval(loadingTickTimer);
+          loadingTickTimer = null;
+        }
+      }
+
+      function startLoadingTimers() {
+        stopLoadingTimers();
+        loadingStartAt = Date.now();
+        loadingStageIdx = 0;
+        loadingStageTextEl.textContent = LOADING_STAGES[0];
+        loadingTimerEl.textContent = '已耗时 0.0s';
+
+        loadingRotateTimer = setInterval(() => {
+          loadingStageIdx = (loadingStageIdx + 1) % LOADING_STAGES.length;
+          loadingStageTextEl.classList.add('is-swapping');
+          setTimeout(() => {
+            loadingStageTextEl.textContent = LOADING_STAGES[loadingStageIdx];
+            loadingStageTextEl.classList.remove('is-swapping');
+          }, 180);
+        }, 1850);
+
+        loadingTickTimer = setInterval(() => {
+          const sec = ((Date.now() - loadingStartAt) / 1000).toFixed(1);
+          loadingTimerEl.textContent = `已耗时 ${sec}s`;
+        }, 150);
+      }
+
+      function setBadgeState(state, text) {
+        statusStageEl.classList.remove('is-checking', 'is-online', 'is-offline');
+        statusBadgeEl.classList.remove('is-checking', 'is-offline');
+
+        if (state === 'checking') {
+          statusStageEl.classList.add('is-checking');
+          statusBadgeEl.classList.add('is-checking');
+          loadingPanelEl.hidden = false;
+          onlineNoteEl.hidden = true;
+          tunnelAlertEl.hidden = true;
+          recheckBtnEl.hidden = false;
+        } else if (state === 'offline') {
+          statusStageEl.classList.add('is-offline');
+          statusBadgeEl.classList.add('is-offline');
+          loadingPanelEl.hidden = true;
+          onlineNoteEl.hidden = true;
+          tunnelAlertEl.hidden = false;
+          recheckBtnEl.hidden = true;
         } else {
-          showTunnelAlert(DEFAULT_ERROR_MSG);
+          statusStageEl.classList.add('is-online');
+          loadingPanelEl.hidden = true;
+          onlineNoteEl.hidden = false;
+          tunnelAlertEl.hidden = true;
+          recheckBtnEl.hidden = false;
         }
-        return false;
-      } finally {
-        if (timer !== null) clearTimeout(timer);
+
+        statusTextEl.textContent = sanitizeSensitiveText(text) || '状态更新中';
       }
-    }
 
-    // 重新拉取隧道地址并自检，支持一键重试与卡住操作的自动续跑
-    async function retryTunnel() {
-      if (isCheckingTunnel) return false;
-      isCheckingTunnel = true;
-      clearRedirectTimer();
+      function showTunnelAlert(errInfo) {
+        tunnelAlertTitleEl.textContent = sanitizeSensitiveText(errInfo?.title) || DEFAULT_ERROR_TITLE;
+        tunnelAlertMsgEl.textContent = sanitizeSensitiveText(errInfo?.message) || DEFAULT_ERROR_MSG;
+        setBadgeState('offline', '连接异常 · 配音服务暂不可用');
+      }
 
-      retryBtnEl.disabled = true;
-      retryBtnEl.innerText = '连接中…';
-      setBadgeState('checking', '正在连通 Mac 算力中枢...');
+      function showToast(message, type = 'success') {
+        const cleanMsg = sanitizeSensitiveText(message);
+        if (!cleanMsg || !toastStackEl) return;
 
-      try {
-        await loadTunnel();
-        const ok = await checkTunnel();
-        if (ok) {
-          if (pendingEnterWorkbench) {
-            pendingEnterWorkbench = false;
-            setBadgeState('online', '连接正常 · 正在为您进入工作台...');
-            window.location.href = activeUrl;
-          } else {
-            setBadgeState('online', '连接正常 · 算力中枢在线，即将自动进入...');
-            // 1.5 秒后自动跳转
-            redirectTimer = setTimeout(() => {
-              if (tunnelConnected && !isCheckingTunnel) {
-                window.location.href = activeUrl;
-              }
-            }, 1500);
+        // 限制同时展示的 Toast 数量，防止小屏下堆叠遮挡
+        while (toastStackEl.children.length >= 1) {
+          toastStackEl.removeChild(toastStackEl.firstElementChild);
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `toast-item is-${type}`;
+        const iconMarkup = type === 'error' ? ICONS.alert : type === 'info' ? ICONS.info : ICONS.check;
+        toast.innerHTML = `<span class="icon-slot">${iconMarkup}</span><span></span>`;
+        toast.querySelector('span:last-child').textContent = cleanMsg;
+        toastStackEl.appendChild(toast);
+
+        requestAnimationFrame(() => {
+          toast.classList.add('is-visible');
+        });
+
+        setTimeout(() => {
+          toast.classList.remove('is-visible');
+          setTimeout(() => {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, 240);
+        }, 2600);
+      }
+
+      async function copyTextWithFallback(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          try {
+            await navigator.clipboard.writeText(text);
+            return true;
+          } catch (e) {
+            // 继续尝试降级复制
           }
         }
-        return ok;
-      } catch (e) {
-        tunnelConnected = false;
-        setBadgeState('offline', '连接失败 · 配音服务暂不可用');
-        showTunnelAlert(DEFAULT_ERROR_MSG);
+
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.setAttribute('aria-hidden', 'true');
+          ta.style.position = 'fixed';
+          ta.style.top = '-9999px';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus({ preventScroll: true });
+          ta.select();
+          ta.setSelectionRange(0, ta.value.length);
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          return Boolean(ok);
+        } catch (e) {
+          return false;
+        }
+      }
+
+      // 动态拉取最新隧道配置（采用 95s AbortController 超时守卫，对非 2xx 状态归因兜底）
+      async function loadTunnel() {
+        lastLoadError = null;
+        try {
+          const { response } = await fetchWithTimeout(
+            'tunnel.json?t=' + Date.now(),
+            { cache: 'no-store' },
+            CLIENT_TIMEOUT_MS
+          );
+          if (response && response.ok) {
+            const data = await response.json();
+            if (data && isValidHttpUrl(data.url)) {
+              activeUrl = data.url.trim();
+              updateActiveEndpointDisplay(activeUrl);
+              return true;
+            }
+          } else if (response) {
+            let bodyText = '';
+            try {
+              bodyText = await response.text();
+            } catch (e) {
+              bodyText = '';
+            }
+            lastLoadError = classifyTunnelError({
+              status: response.status,
+              rawText: bodyText
+            });
+          }
+        } catch (e) {
+          lastLoadError = classifyTunnelError({
+            errName: e?.name || '',
+            timedOut: Boolean(e?.__timedOut || e?.name === 'AbortError'),
+            isOffline: typeof navigator !== 'undefined' && navigator.onLine === false,
+            rawText: e?.message || ''
+          });
+        } finally {
+          updateActiveEndpointDisplay(activeUrl);
+        }
         return false;
-      } finally {
+      }
+
+      // 连通性自检（统一 95s AbortController 超时与异常大白话归因）
+      async function checkTunnel() {
+        if (!isValidHttpUrl(activeUrl)) {
+          tunnelConnected = false;
+          clearRedirectTimer();
+          showTunnelAlert({
+            title: '配音服务地址配置异常',
+            message: '当前工作台入口地址格式无效，请稍候点击下方「重试连接」刷新节点配置。'
+          });
+          return false;
+        }
+
+        try {
+          await fetchWithTimeout(
+            activeUrl,
+            {
+              method: 'GET',
+              mode: 'no-cors',
+              cache: 'no-store',
+              credentials: 'omit'
+            },
+            CLIENT_TIMEOUT_MS
+          );
+          tunnelConnected = true;
+          setBadgeState('online', '连接正常 · 算力中枢在线');
+          return true;
+        } catch (e) {
+          tunnelConnected = false;
+          clearRedirectTimer();
+          const isOffline = typeof navigator !== 'undefined' && navigator.onLine === false;
+          const errInfo = classifyTunnelError({
+            errName: e?.name || '',
+            timedOut: Boolean(e?.__timedOut || e?.name === 'AbortError'),
+            isOffline,
+            rawText: e?.message || ''
+          });
+          showTunnelAlert(lastLoadError && !isOffline ? lastLoadError : errInfo);
+          return false;
+        }
+      }
+
+      // 全链路自检协调函数
+      async function retryTunnel({ manual = false } = {}) {
+        if (isCheckingTunnel) return false;
+        isCheckingTunnel = true;
+        clearRedirectTimer();
+        if (manual) {
+          autoRedirectPaused = true;
+        }
+
+        retryBtnEl.disabled = true;
+        retryBtnLabelEl.textContent = '连接中…';
+        recheckBtnEl.disabled = true;
+        recheckIconEl.classList.add('is-spinning');
+        setBadgeState('checking', '正在连通 Mac 算力中枢...');
+        startLoadingTimers();
+
+        try {
+          await loadTunnel();
+          const ok = await checkTunnel();
+          if (ok) {
+            if (pendingEnterWorkbench) {
+              pendingEnterWorkbench = false;
+              setBadgeState('online', '连接正常 · 正在为您进入工作台...');
+              onlineNoteTextEl.textContent = '通道已打通，正在进入配音工作台…';
+              pauseAutoBtnEl.hidden = true;
+              window.location.href = activeUrl;
+            } else if (autoRedirectPaused) {
+              setBadgeState('online', '连接正常 · 算力中枢在线');
+              onlineNoteTextEl.textContent = '探测通过，点击下方橙色按钮即可随时进入工作台。';
+              pauseAutoBtnEl.hidden = true;
+            } else {
+              setBadgeState('online', '连接正常 · 算力中枢在线，即将自动进入...');
+              onlineNoteTextEl.textContent = '1.5 秒后自动为您跳转工作台，可随时暂停留在此页。';
+              pauseAutoBtnEl.hidden = false;
+              redirectTimer = setTimeout(() => {
+                if (tunnelConnected && !isCheckingTunnel && !autoRedirectPaused) {
+                  window.location.href = activeUrl;
+                }
+              }, 1500);
+            }
+          }
+          return ok;
+        } catch (e) {
+          tunnelConnected = false;
+          showTunnelAlert(classifyTunnelError({
+            errName: e?.name || '',
+            rawText: e?.message || '',
+            isOffline: typeof navigator !== 'undefined' && navigator.onLine === false
+          }));
+          return false;
+        } finally {
+          stopLoadingTimers();
+          isCheckingTunnel = false;
+          retryBtnEl.disabled = false;
+          retryBtnLabelEl.textContent = '重试连接';
+          recheckBtnEl.disabled = false;
+          recheckIconEl.classList.remove('is-spinning');
+        }
+      }
+
+      // 事件监听绑定
+      retryBtnEl.addEventListener('click', () => {
+        retryTunnel({ manual: true });
+      });
+
+      recheckBtnEl.addEventListener('click', () => {
+        retryTunnel({ manual: true });
+      });
+
+      pauseAutoBtnEl.addEventListener('click', () => {
+        pauseAutoRedirect('已暂停自动跳转，您可先查看或复制凭据后再点击进入。');
+        showToast('已暂停自动跳转', 'info');
+      });
+
+      directBtnEl.addEventListener('click', (e) => {
+        if (tunnelConnected && !isCheckingTunnel) {
+          clearRedirectTimer();
+          return;
+        }
+        e.preventDefault();
+        pendingEnterWorkbench = true;
+        if (isCheckingTunnel) {
+          setBadgeState('checking', '正在确认隧道连接，连通后将自动进入...');
+        } else {
+          retryTunnel({ manual: false });
+        }
+      });
+
+      // 一键复制全套分享信息（无系统弹窗，自带剪贴板降级抽屉）
+      copyBtnEl.addEventListener('click', async () => {
+        pauseAutoRedirect('已暂停自动跳转，方便您从容分享与复制。');
+        const shareText = [
+          '郭总专属 AI 短视频配音工作台',
+          `访问地址：${activeUrl}`,
+          '账号：admin（或 guowei）',
+          '密码：888888'
+        ].join('\n');
+
+        const ok = await copyTextWithFallback(shareText);
+        if (ok) {
+          manualCopyBoxEl.hidden = true;
+          copyBtnEl.classList.add('is-copied');
+          copyBtnIconEl.innerHTML = ICONS.check;
+          copyBtnLabelEl.textContent = '已复制直连地址与访问密码';
+          showToast('已成功复制访问信息，可直接微信发送给朋友');
+          setTimeout(() => {
+            copyBtnEl.classList.remove('is-copied');
+            copyBtnIconEl.innerHTML = ICONS.copy;
+            copyBtnLabelEl.textContent = '复制直连地址与访问密码';
+          }, 2200);
+        } else {
+          manualCopyTextareaEl.value = shareText;
+          manualCopyBoxEl.hidden = false;
+          manualCopyTextareaEl.focus();
+          manualCopyTextareaEl.select();
+          showToast('自动复制受限，已展开文本供您长按复制', 'info');
+        }
+      });
+
+      // 单字段凭据便捷复制
+      document.querySelectorAll('[data-copy-field]').forEach((btn) => {
+        btn.addEventListener('click', async () => {
+          pauseAutoRedirect('已暂停自动跳转，方便您复制账号密码。');
+          const value = btn.getAttribute('data-copy-field') || '';
+          const ok = await copyTextWithFallback(value);
+          const iconEl = btn.querySelector('.icon-slot');
+          const textEl = btn.querySelector('span:last-child');
+          if (ok) {
+            btn.classList.add('is-copied');
+            if (iconEl) iconEl.innerHTML = ICONS.check;
+            if (textEl) textEl.textContent = '已复制';
+            showToast(`已复制 ${value === '888888' ? '访问密码' : '登录账号'}`);
+            setTimeout(() => {
+              btn.classList.remove('is-copied');
+              if (iconEl) iconEl.innerHTML = ICONS.copy;
+              if (textEl) textEl.textContent = '复制';
+            }, 1800);
+          } else {
+            showToast('自动复制受限，请直接手动选中文字复制', 'info');
+          }
+        });
+      });
+
+      // 全局未捕获异常兜底，确保任何意外均不白屏
+      window.addEventListener('error', (event) => {
+        stopLoadingTimers();
         isCheckingTunnel = false;
         retryBtnEl.disabled = false;
-        retryBtnEl.innerText = '重试连接';
-      }
-    }
-
-    retryBtnEl.addEventListener('click', () => {
-      retryTunnel();
-    });
-
-    directBtnEl.addEventListener('click', (e) => {
-      if (tunnelConnected && !isCheckingTunnel) {
-        clearRedirectTimer();
-        return;
-      }
-      e.preventDefault();
-      pendingEnterWorkbench = true;
-      if (isCheckingTunnel) {
-        setBadgeState('checking', '正在确认隧道连接，连通后将自动进入...');
-      } else {
-        retryTunnel();
-      }
-    });
-
-    document.getElementById('copy-btn').addEventListener('click', () => {
-      const shareText = `🎙️ 郭总专属 AI 短视频配音工作台\n🌐 访问地址：${activeUrl}\n🔑 账号：admin\n🔒 密码：888888`;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(shareText).then(() => {
-          alert('✅ 已成功复制访问信息！您可以直接微信发给朋友。');
-        }).catch(() => {
-          prompt('请长按复制以下访问信息：', shareText);
+        retryBtnLabelEl.textContent = '重试连接';
+        recheckBtnEl.disabled = false;
+        recheckIconEl.classList.remove('is-spinning');
+        const info = classifyTunnelError({
+          rawText: event?.message || event?.error?.message || ''
         });
-      } else {
-        prompt('请长按复制以下访问信息：', shareText);
-      }
-    });
+        showTunnelAlert(info);
+      });
 
-    retryTunnel();
+      window.addEventListener('unhandledrejection', (event) => {
+        if (event && typeof event.preventDefault === 'function') {
+          event.preventDefault();
+        }
+        stopLoadingTimers();
+        isCheckingTunnel = false;
+        retryBtnEl.disabled = false;
+        retryBtnLabelEl.textContent = '重试连接';
+        recheckBtnEl.disabled = false;
+        recheckIconEl.classList.remove('is-spinning');
+        const reason = event?.reason;
+        const info = classifyTunnelError({
+          errName: reason?.name || '',
+          timedOut: reason?.name === 'AbortError',
+          isOffline: typeof navigator !== 'undefined' && navigator.onLine === false,
+          rawText: typeof reason === 'string' ? reason : (reason?.message || '')
+        });
+        showTunnelAlert(info);
+      });
+
+      // 初始化图标并启动首轮连通探测
+      renderIcons();
+      updateActiveEndpointDisplay(activeUrl);
+      retryTunnel({ manual: false });
+    })();
   </script>
-
 </body>
 </html>
